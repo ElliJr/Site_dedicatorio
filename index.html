@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heart Canvas - 8 Meses de Namoro</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      font-family: Arial, sans-serif;
+      color: #fff;
+      text-align: center;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    h1 {
+      margin: 0;
+      font-size: 2em;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    p {
+      margin-top: 10px;
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Feliz 8 Meses de Namoro Moh!</h1>
+  <p>Você é tudo para mim minha princesa, meu amor. ❤️</p>
+  <canvas id="heartCanvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById('heartCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight * 0.6;
+    }
+
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      initializeHearts();
+    });
+
+    resizeCanvas();
+
+    const hearts = [];
+
+    function initializeHearts() {
+      hearts.length = 0;
+      for (let i = 0; i < 50; i++) {
+        hearts.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 30 + 10,
+          color: `rgba(255, 0, 72, ${Math.random()})`,
+          speed: Math.random() * 2 + 1,
+        });
+      }
+    }
+
+    initializeHearts();
+
+    function drawHeart(ctx, x, y, size, color) {
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.bezierCurveTo(x - size / 2, y - size / 2, x - size, y + size / 3, x, y + size);
+      ctx.bezierCurveTo(x + size, y + size / 3, x + size / 2, y - size / 2, x, y);
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      hearts.forEach((heart) => {
+        drawHeart(ctx, heart.x, heart.y, heart.size, heart.color);
+        heart.y -= heart.speed;
+        if (heart.y < -heart.size) {
+          heart.y = canvas.height + heart.size;
+          heart.x = Math.random() * canvas.width;
+        }
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
